@@ -5,13 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WordsCounter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="496" Width="800">
     <Grid>
-        <Button Content="Parse" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
-        <Button Content="Select file" HorizontalAlignment="Left" Margin="260,327,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <TextBox Name="filePathTextBox" HorizontalAlignment="Left" Margin="132,328,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <ProgressBar Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="10" Margin="192,368,0,0" VerticalAlignment="Top" Width="100"/>
-        <TextBox Name="resultsTextBox" HorizontalAlignment="Left" Margin="400,154,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="324" Height="224" VerticalScrollBarVisibility="Auto"/>
-
+        <StackPanel Margin="10,10,10,10" Orientation="Vertical">
+            <GroupBox Header="Select a file" Height="98" Width="780">
+                <Grid>
+                    <Button Content="Select a file" HorizontalAlignment="Left" Margin="678,33,0,0" VerticalAlignment="Top" Click="Button_Click" Width="80" Height="32"/>
+                    <TextBox x:Name="filePathTextBox" HorizontalAlignment="Left" Margin="4,33,0,0" TextWrapping="Wrap" Text="File path..." VerticalAlignment="Top" Width="669" Height="32" FontSize="18" IsEnabled="False" IsReadOnly="True"/>
+                    <Label Content="Current file:" HorizontalAlignment="Left" Margin="4,7,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Count words" Height="357" Width="780">
+                <Grid>
+                    <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="Button_Click_1" Height="32" Width="90" IsEnabled="False"/>
+                    <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="10" Margin="192,368,0,0" VerticalAlignment="Top" Width="100"/>
+                    <TextBox x:Name="resultsTextBox" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="299" Height="289" VerticalScrollBarVisibility="Auto"/>
+                    <Label Content="Results:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
     </Grid>
 </Window>

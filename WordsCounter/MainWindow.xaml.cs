@@ -17,15 +17,16 @@ namespace WordsCounter
             InitializeComponent();
         }
 
-        string fileText = "";
+        string? filePath = null;
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                fileText = File.ReadAllText(openFileDialog.FileName);
-                filePathTextBox.Text = openFileDialog.FileName;
+                filePath = openFileDialog.FileName;
+                filePathTextBox.Text = filePath;
+                startCountingBtn.IsEnabled = true;
             }
         }
 
@@ -35,12 +36,13 @@ namespace WordsCounter
             {
                 await Task.Run(() =>
                 {
+                    var fileText = File.ReadAllText(filePath);
                     var entries = fileText.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
                     Dispatcher.Invoke(() =>
                     {
                         parsingStatusProgressBar.Maximum = entries.Length;
                     });
-                    
+
                     var dict = new Dictionary<string, int>();
                     for (int i = 0; i < entries.Length; i++)
                     {
