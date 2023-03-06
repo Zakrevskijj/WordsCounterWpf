@@ -18,8 +18,8 @@
             <GroupBox Header="Count words" Height="357" Width="780">
                 <Grid>
                     <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="Button_Click_1" Height="32" Width="90" IsEnabled="False"/>
-                    <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="10" Margin="192,368,0,0" VerticalAlignment="Top" Width="100"/>
-                    <TextBox x:Name="resultsTextBox" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="299" Height="289" VerticalScrollBarVisibility="Auto"/>
+                    <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="32" Margin="10,292,0,0" VerticalAlignment="Top" Width="653"/>
+                    <TextBox x:Name="resultsTextBox" HorizontalAlignment="Left" Margin="364,0,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="299" Height="225" VerticalScrollBarVisibility="Auto"/>
                     <Label Content="Results:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </GroupBox>

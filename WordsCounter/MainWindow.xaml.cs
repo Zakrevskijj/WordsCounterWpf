@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,6 +19,8 @@ namespace WordsCounter
         }
 
         string? filePath = null;
+        bool isCounting = false;
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -32,49 +35,75 @@ namespace WordsCounter
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            try
+            if (isCounting)
             {
-                await Task.Run(() =>
+                cancellationTokenSource.Cancel();
+                ResetCounting();
+            }
+            else
+            {
+                isCounting = true;
+                startCountingBtn.Content = "Stop Counting";
+                cancellationTokenSource = new CancellationTokenSource();
+                var cancellationToken = cancellationTokenSource.Token;
+                try
                 {
-                    var fileText = File.ReadAllText(filePath);
-                    var entries = fileText.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
-                    Dispatcher.Invoke(() =>
+                    await Task.Run(() =>
                     {
-                        parsingStatusProgressBar.Maximum = entries.Length;
-                    });
+                        var fileText = File.ReadAllText(filePath);
+                        var entries = fileText.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
+                        Dispatcher.Invoke(() =>
+                        {
+                            parsingStatusProgressBar.Maximum = entries.Length;
+                        });
 
-                    var dict = new Dictionary<string, int>();
-                    for (int i = 0; i < entries.Length; i++)
-                    {
-                        if (dict.TryGetValue(entries[i], out int curValue))
+                        var dict = new Dictionary<string, int>();
+                        for (int i = 0; i < entries.Length; i++)
                         {
-                            dict[entries[i]] = curValue + 1;
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                throw new TaskCanceledException();
+                            }
+                            if (dict.TryGetValue(entries[i], out int curValue))
+                            {
+                                dict[entries[i]] = curValue + 1;
+                            }
+                            else
+                            {
+                                dict.Add(entries[i], 1);
+                            }
+                            Dispatcher.Invoke(() =>
+                            {
+                                parsingStatusProgressBar.Value++;
+                            });
+                            //Thread.Sleep(3000);
                         }
-                        else
+
+                        var resultedText = "";
+                        foreach (var keyValuePair in dict)
                         {
-                            dict.Add(entries[i], 1);
+                            resultedText += keyValuePair.Key + ": " + keyValuePair.Value + Environment.NewLine;
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            parsingStatusProgressBar.Value++;
+                            resultsTextBox.Text = resultedText;
+                            ResetCounting();
                         });
-                    }
+                    }, cancellationToken);
+                }
+                catch (TaskCanceledException) { }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
 
-                    var resultedText = "";
-                    foreach (var keyValuePair in dict)
-                    {
-                        resultedText += keyValuePair.Key + ": " + keyValuePair.Value + Environment.NewLine;
-                    }
-                    Dispatcher.Invoke(() =>
-                    {
-                        resultsTextBox.Text = resultedText;
-                    });
-                });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        private void ResetCounting()
+        {
+            isCounting = false;
+            startCountingBtn.Content = "Start Counting";
+            parsingStatusProgressBar.Value = 0;
         }
     }
 }
