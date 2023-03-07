@@ -1,12 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using WordsCounter.Business;
 
-namespace WordsCounter
+namespace WordsCounterApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -18,9 +19,9 @@ namespace WordsCounter
             InitializeComponent();
         }
 
-        string? filePath = null;
+        string filePath;
         bool isCounting = false;
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        CancellationTokenSource cancellationTokenSource;
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -44,50 +45,39 @@ namespace WordsCounter
             {
                 isCounting = true;
                 startCountingBtn.Content = "Stop Counting";
+
                 cancellationTokenSource = new CancellationTokenSource();
                 var cancellationToken = cancellationTokenSource.Token;
                 try
                 {
                     await Task.Run(() =>
                     {
-                        var fileText = File.ReadAllText(filePath);
-                        var entries = fileText.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
-                        Dispatcher.Invoke(() =>
-                        {
-                            parsingStatusProgressBar.Maximum = entries.Length;
-                        });
-
-                        var dict = new Dictionary<string, int>();
-                        for (int i = 0; i < entries.Length; i++)
-                        {
-                            if (cancellationToken.IsCancellationRequested)
+                        var stopWatch = new Stopwatch();
+                        stopWatch.Start();
+                        var wordsCounterHelper = new WordsCounterHelper(filePath);
+                        var dict = wordsCounterHelper.ParseFileAndCountWords(
+                            (int maxProgressValue) => Dispatcher.Invoke(() =>
                             {
-                                throw new TaskCanceledException();
-                            }
-                            if (dict.TryGetValue(entries[i], out int curValue))
-                            {
-                                dict[entries[i]] = curValue + 1;
-                            }
-                            else
-                            {
-                                dict.Add(entries[i], 1);
-                            }
-                            Dispatcher.Invoke(() =>
+                                parsingStatusProgressBar.Maximum = maxProgressValue;
+                            }),
+                            () => Dispatcher.Invoke(() =>
                             {
                                 parsingStatusProgressBar.Value++;
-                            });
-                            //Thread.Sleep(3000);
-                        }
+                            }));
 
-                        var resultedText = "";
-                        foreach (var keyValuePair in dict)
-                        {
-                            resultedText += keyValuePair.Key + ": " + keyValuePair.Value + Environment.NewLine;
-                        }
+                        var wordCounts = dict
+                            .Select(x => new WordCount
+                            {
+                                Word = x.Key,
+                                Occurences = x.Value
+                            });
+
                         Dispatcher.Invoke(() =>
                         {
-                            resultsTextBox.Text = resultedText;
+                            resultsDataGrid.ItemsSource = wordCounts;
                             ResetCounting();
+                            stopWatch.Stop();
+                            durationMsLabel.Content = stopWatch.ElapsedMilliseconds;
                         });
                     }, cancellationToken);
                 }
@@ -104,6 +94,12 @@ namespace WordsCounter
             isCounting = false;
             startCountingBtn.Content = "Start Counting";
             parsingStatusProgressBar.Value = 0;
+        }
+
+        public class WordCount
+        {
+            public string Word { get; set; }
+            public int Occurences { get; set; }
         }
     }
 }
