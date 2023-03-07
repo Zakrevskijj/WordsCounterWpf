@@ -39,12 +39,11 @@ namespace WordsCounterApp
             if (isCounting)
             {
                 cancellationTokenSource.Cancel();
-                ResetCounting();
+                StopCounting();
             }
             else
             {
-                isCounting = true;
-                startCountingBtn.Content = "Stop Counting";
+                StartCounting();
 
                 cancellationTokenSource = new CancellationTokenSource();
                 var cancellationToken = cancellationTokenSource.Token;
@@ -54,16 +53,9 @@ namespace WordsCounterApp
                     {
                         var stopWatch = new Stopwatch();
                         stopWatch.Start();
+
                         var wordsCounterHelper = new WordsCounterHelper(filePath);
-                        var dict = wordsCounterHelper.ParseFileAndCountWords(
-                            (int maxProgressValue) => Dispatcher.Invoke(() =>
-                            {
-                                parsingStatusProgressBar.Maximum = maxProgressValue;
-                            }),
-                            () => Dispatcher.Invoke(() =>
-                            {
-                                parsingStatusProgressBar.Value++;
-                            }));
+                        var dict = wordsCounterHelper.ParseFileAndCountWords(cancellationToken);
 
                         var wordCounts = dict
                             .Select(x => new WordCount
@@ -75,7 +67,7 @@ namespace WordsCounterApp
                         Dispatcher.Invoke(() =>
                         {
                             resultsDataGrid.ItemsSource = wordCounts;
-                            ResetCounting();
+                            StopCounting();
                             stopWatch.Stop();
                             durationMsLabel.Content = stopWatch.ElapsedMilliseconds;
                         });
@@ -89,17 +81,22 @@ namespace WordsCounterApp
             }
         }
 
-        private void ResetCounting()
+        private void StartCounting()
+        {
+            resultsDataGrid.ItemsSource = null;
+            resultsDataGrid.Items.Refresh();
+            isCounting = true;
+            startCountingBtn.Content = "Stop Counting";
+            parsingStatusProgressBar.Visibility = Visibility.Visible;
+            selectFileBtn.IsEnabled = false;
+        }
+
+        private void StopCounting()
         {
             isCounting = false;
             startCountingBtn.Content = "Start Counting";
-            parsingStatusProgressBar.Value = 0;
-        }
-
-        public class WordCount
-        {
-            public string Word { get; set; }
-            public int Occurences { get; set; }
+            parsingStatusProgressBar.Visibility = Visibility.Hidden;
+            selectFileBtn.IsEnabled = true;
         }
     }
 }

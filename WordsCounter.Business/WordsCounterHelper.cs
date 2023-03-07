@@ -1,4 +1,6 @@
-﻿namespace WordsCounter.Business
+﻿using System.Threading.Tasks;
+
+namespace WordsCounter.Business
 {
     public class WordsCounterHelper
     {
@@ -8,42 +10,20 @@
             _filePath = filePath;
         }
 
-        public Dictionary<string, int> ParseFileAndCountWords(Action<int> setProgressMax, Action iterateProgressTracker, CancellationToken cancellationToken = default)
+        public Dictionary<string, int> ParseFileAndCountWords(CancellationToken cancellationToken)
         {
             var fileText = File.ReadAllText(_filePath);
-            //ToDo: Error handling
-
-            var entries = fileText.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
-
-            setProgressMax(entries.Length);
-
-            var dict = new Dictionary<string, int>();
-            for (int i = 0; i < entries.Length; i++)
+            if (cancellationToken.IsCancellationRequested)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    throw new TaskCanceledException();
-                }
-                if (dict.TryGetValue(entries[i], out int curValue))
-                {
-                    dict[entries[i]] = curValue + 1;
-                }
-                else
-                {
-                    dict.Add(entries[i], 1);
-                }
-                iterateProgressTracker();
+                throw new TaskCanceledException();
             }
-            return dict;
-        }
-
-        public Dictionary<string, int> ParseFileAndCountWords()
-        {
-            var fileText = File.ReadAllText(_filePath);
-            //ToDo: Error handling
 
             var entries = fileText
                 .Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new TaskCanceledException();
+            }
 
             return CalculateWordCounts(entries);
         }

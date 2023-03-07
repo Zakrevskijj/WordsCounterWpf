@@ -10,7 +10,7 @@
         <StackPanel Margin="10,10,10,10" Orientation="Vertical">
             <GroupBox Header="Select a file" Height="98" Width="780">
                 <Grid>
-                    <Button Content="Select a file" HorizontalAlignment="Left" Margin="678,33,0,0" VerticalAlignment="Top" Click="Button_Click" Width="80" Height="32"/>
+                    <Button Name="selectFileBtn" Content="Select a file" HorizontalAlignment="Left" Margin="678,33,0,0" VerticalAlignment="Top" Click="Button_Click" Width="80" Height="32"/>
                     <TextBox x:Name="filePathTextBox" HorizontalAlignment="Left" Margin="4,33,0,0" TextWrapping="Wrap" Text="File path..." VerticalAlignment="Top" Width="669" Height="32" FontSize="18" IsEnabled="False" IsReadOnly="True"/>
                     <Label Content="Current file:" HorizontalAlignment="Left" Margin="4,7,0,0" VerticalAlignment="Top"/>
                 </Grid>
@@ -18,11 +18,11 @@
             <GroupBox Header="Count words" Height="357" Width="780">
                 <Grid>
                     <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="Button_Click_1" Height="32" Width="90" IsEnabled="False"/>
-                    <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="32" Margin="10,292,0,0" VerticalAlignment="Top" Width="653"/>
+                    <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="32" Margin="10,292,0,0" VerticalAlignment="Top" Width="653" IsIndeterminate="True" Visibility="Hidden" />
                     <Label Content="Results:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
 
-                    <ScrollViewer Margin="0,35,384,54">
-                        <DataGrid Name="resultsDataGrid"/>
+                    <ScrollViewer Margin="10,35,374,54">
+                        <DataGrid Name="resultsDataGrid" IsReadOnly="True" />
                     </ScrollViewer>
                     <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" VerticalAlignment="Top" Margin="408,35,0,0">
                         <Label Content="Last duration (ms):" Width="111"/>
