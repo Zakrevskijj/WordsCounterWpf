@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using WordsCounter.Business;
+using WordsCounterApp.Business;
 
 namespace WordsCounterApp
 {
@@ -14,16 +14,19 @@ namespace WordsCounterApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly WordsCounterService _wordsCounterService;
+
+        public MainWindow(WordsCounterService wordsCounterService)
         {
             InitializeComponent();
+            _wordsCounterService = wordsCounterService;
         }
 
         string filePath;
         bool isCounting = false;
         CancellationTokenSource cancellationTokenSource;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SelectFileBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
@@ -34,7 +37,7 @@ namespace WordsCounterApp
             }
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void StartCountingBtn_Click(object sender, RoutedEventArgs e)
         {
             if (isCounting)
             {
@@ -54,10 +57,9 @@ namespace WordsCounterApp
                         var stopWatch = new Stopwatch();
                         stopWatch.Start();
 
-                        var wordsCounterHelper = new WordsCounterHelper(filePath);
-                        var dict = wordsCounterHelper.ParseFileAndCountWords(cancellationToken);
+                        var wordCountsDict = _wordsCounterService.ParseFileAndCountWords(filePath, cancellationToken);
 
-                        var wordCounts = dict
+                        var wordCounts = wordCountsDict
                             .Select(x => new WordCount
                             {
                                 Word = x.Key,

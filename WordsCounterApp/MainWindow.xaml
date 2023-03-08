@@ -3,21 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WordsCounter"
+        xmlns:local="clr-namespace:WordsCounterApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="496" Width="800">
     <Grid>
         <StackPanel Margin="10,10,10,10" Orientation="Vertical">
             <GroupBox Header="Select a file" Height="98" Width="780">
                 <Grid>
-                    <Button Name="selectFileBtn" Content="Select a file" HorizontalAlignment="Left" Margin="678,33,0,0" VerticalAlignment="Top" Click="Button_Click" Width="80" Height="32"/>
+                    <Button Name="selectFileBtn" Content="Select a file" HorizontalAlignment="Left" Margin="678,33,0,0" VerticalAlignment="Top" Click="SelectFileBtn_Click" Width="80" Height="32"/>
                     <TextBox x:Name="filePathTextBox" HorizontalAlignment="Left" Margin="4,33,0,0" TextWrapping="Wrap" Text="File path..." VerticalAlignment="Top" Width="669" Height="32" FontSize="18" IsEnabled="False" IsReadOnly="True"/>
                     <Label Content="Current file:" HorizontalAlignment="Left" Margin="4,7,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Count words" Height="357" Width="780">
                 <Grid>
-                    <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="Button_Click_1" Height="32" Width="90" IsEnabled="False"/>
+                    <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="StartCountingBtn_Click_1" Height="32" Width="90" IsEnabled="False"/>
                     <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="32" Margin="10,292,0,0" VerticalAlignment="Top" Width="653" IsIndeterminate="True" Visibility="Hidden" />
                     <Label Content="Results:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
 
