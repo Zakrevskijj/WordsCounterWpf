@@ -1,11 +1,9 @@
-﻿using System.Threading.Tasks;
-
-namespace WordsCounter.Business
+﻿namespace WordsCounter.Business
 {
     public class WordsCounterHelper
     {
         private string _filePath;
-        public WordsCounterHelper(string filePath)
+        public WordsCounterHelper(string filePath, Filesystem)
         {
             _filePath = filePath;
         }
