@@ -18,7 +18,7 @@ namespace WordsCounterApp.Business
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="TaskCanceledException"></exception>
-        public Dictionary<string, int> ParseFileAndCountWords(string filePath, CancellationToken cancellationToken)
+        public Dictionary<string, int> ParseFileAndCountWords(string filePath, CancellationToken cancellationToken = default)
         {
             var fileText = _fileSystem.File.ReadAllText(filePath);
             if (cancellationToken.IsCancellationRequested)
