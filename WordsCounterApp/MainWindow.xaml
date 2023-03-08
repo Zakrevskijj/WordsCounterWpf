@@ -17,7 +17,7 @@
             </GroupBox>
             <GroupBox Header="Count words" Height="357" Width="780">
                 <Grid>
-                    <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="StartCountingBtn_Click_1" Height="32" Width="90" IsEnabled="False"/>
+                    <Button x:Name="startCountingBtn" Content="Start Counting" HorizontalAlignment="Left" Margin="668,292,0,0" VerticalAlignment="Top" Click="StartCountingBtn_Click" Height="32" Width="90" IsEnabled="False"/>
                     <ProgressBar x:Name="parsingStatusProgressBar" HorizontalAlignment="Left" Height="32" Margin="10,292,0,0" VerticalAlignment="Top" Width="653" IsIndeterminate="True" Visibility="Hidden" />
                     <Label Content="Results:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
 

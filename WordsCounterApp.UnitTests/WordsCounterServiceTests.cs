@@ -34,7 +34,7 @@ namespace WordsCounterApp.UnitTests
 
             // Act
             // Assert
-            Assert.Throws<TaskCanceledException>(() => wordsCounterService.ParseFileAndCountWords(filePath, cancellationTokenSource.Token));
+            Assert.Throws<TaskCanceledException>(() => wordsCounterService.ParseFileAndCountWords(_filePath, cancellationTokenSource.Token));
         }
 
         private static MockFileSystem SetupFileSystem(string filePath)
